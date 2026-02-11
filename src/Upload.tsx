@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import tempLogo from './assets/TempLogo.png';
+import tempLogo from './assets/TempLogo2.png';
 import './Upload.css';
+import Layout from './Layout'
 
 function Upload() {
   const [file, setFile] = useState<File | null>(null);
@@ -75,12 +76,13 @@ function Upload() {
     xhr.send(formData);
   };
 
-  return (
+    return (
+    <Layout>
+      
     <>
       <div>
-        <img src={tempLogo} className="logo" alt="GameSync logo" />
+        <img src={tempLogo} className="logo" alt="GameAngle logo" />
       </div>
-
       <div className="upload-container">
         <input
           type="file"
@@ -147,8 +149,10 @@ function Upload() {
           </div>
         )}
 
-      </div>
-    </>
+                </div>
+            </>
+    </Layout>
+       
   );
 }
 

@@ -9,10 +9,20 @@
     <PackageJsonScriptsBuild Condition="$(PackageJsonScriptsBuild) == ''">tsc -b &amp;&amp; vite build</PackageJsonScriptsBuild>
     <PackageJsonScriptsLint Condition="$(PackageJsonScriptsLint) == ''">eslint .</PackageJsonScriptsLint>
     <PackageJsonScriptsPreview Condition="$(PackageJsonScriptsPreview) == ''">vite preview</PackageJsonScriptsPreview>
+    <PackageJsonScriptsServer Condition="$(PackageJsonScriptsServer) == ''">node .\server\server.js</PackageJsonScriptsServer>
+    <PackageJsonDependenciesCors Condition="$(PackageJsonDependenciesCors) == ''">^2.8.6</PackageJsonDependenciesCors>
+    <PackageJsonDependenciesCssSelect Condition="$(PackageJsonDependenciesCssSelect) == ''">^6.0.0</PackageJsonDependenciesCssSelect>
+    <PackageJsonDependenciesExpress Condition="$(PackageJsonDependenciesExpress) == ''">^5.2.1</PackageJsonDependenciesExpress>
+    <PackageJsonDependenciesKysely Condition="$(PackageJsonDependenciesKysely) == ''">^0.28.11</PackageJsonDependenciesKysely>
+    <PackageJsonDependenciesMulter Condition="$(PackageJsonDependenciesMulter) == ''">^2.0.2</PackageJsonDependenciesMulter>
+    <PackageJsonDependenciesNthCheck Condition="$(PackageJsonDependenciesNthCheck) == ''">^2.1.1</PackageJsonDependenciesNthCheck>
+    <PackageJsonDependenciesPg Condition="$(PackageJsonDependenciesPg) == ''">^8.18.0</PackageJsonDependenciesPg>
+    <PackageJsonDependenciesPgPool Condition="$(PackageJsonDependenciesPgPool) == ''">^3.11.0</PackageJsonDependenciesPgPool>
     <PackageJsonDependenciesReact Condition="$(PackageJsonDependenciesReact) == ''">^19.2.0</PackageJsonDependenciesReact>
     <PackageJsonDependenciesReactDom Condition="$(PackageJsonDependenciesReactDom) == ''">^19.2.0</PackageJsonDependenciesReactDom>
+    <PackageJsonDependenciesReactRouterDom Condition="$(PackageJsonDependenciesReactRouterDom) == ''">^7.13.0</PackageJsonDependenciesReactRouterDom>
     <PackageJsonDevdependenciesEslintJs Condition="$(PackageJsonDevdependenciesEslintJs) == ''">^9.39.1</PackageJsonDevdependenciesEslintJs>
-    <PackageJsonDevdependenciesTypesNode Condition="$(PackageJsonDevdependenciesTypesNode) == ''">^24.10.1</PackageJsonDevdependenciesTypesNode>
+    <PackageJsonDevdependenciesTypesNode Condition="$(PackageJsonDevdependenciesTypesNode) == ''">^24.10.10</PackageJsonDevdependenciesTypesNode>
     <PackageJsonDevdependenciesTypesReact Condition="$(PackageJsonDevdependenciesTypesReact) == ''">^19.2.5</PackageJsonDevdependenciesTypesReact>
     <PackageJsonDevdependenciesTypesReactDom Condition="$(PackageJsonDevdependenciesTypesReactDom) == ''">^19.2.3</PackageJsonDevdependenciesTypesReactDom>
     <PackageJsonDevdependenciesVitejsPluginReact Condition="$(PackageJsonDevdependenciesVitejsPluginReact) == ''">^5.1.1</PackageJsonDevdependenciesVitejsPluginReact>

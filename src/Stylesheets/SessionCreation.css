@@ -1,0 +1,110 @@
+.session-creation-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+    .session-creation-container h1 {
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+.session-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+    .form-group label {
+        font-weight: 500;
+        color: #333;
+        width: 180px; 
+        text-align: right;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        background-color: white;
+        color: #333;
+    }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #44a31c;
+        }
+
+.submit-button {
+    background-color: #44a31c;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+    .submit-button:hover {
+        background-color: #2e7d13;
+    }
+
+    .submit-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+.error-message {
+    color: #cc0000;
+    background-color: #ffe6e6;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+.success-container {
+    text-align: center;
+}
+
+    .success-container h2 {
+        color: #2e7d13;
+    }
+
+.link-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+    .link-container input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+.copy-button {
+    background-color: #0066cc;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+    .copy-button:hover {
+        background-color: #0052a3;
+    }
