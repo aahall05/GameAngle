@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Layout from '../Layout';
+import Layout from './Layout';
 //import '../index.css'
 import '../Stylesheets/SessionCreation.css';
 import { useNavigate } from 'react-router-dom';

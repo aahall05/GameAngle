@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import tempLogo from './assets/TempLogo2.png';
-import './Upload.css';
+import tempLogo from '../assets/TempLogo2.png';
+import '../Stylesheets/Upload.css';
 import Layout from './Layout'
 
 function Upload() {

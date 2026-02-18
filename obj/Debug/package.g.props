@@ -12,6 +12,7 @@
     <PackageJsonScriptsServer Condition="$(PackageJsonScriptsServer) == ''">node .\server\server.js</PackageJsonScriptsServer>
     <PackageJsonDependenciesCors Condition="$(PackageJsonDependenciesCors) == ''">^2.8.6</PackageJsonDependenciesCors>
     <PackageJsonDependenciesCssSelect Condition="$(PackageJsonDependenciesCssSelect) == ''">^6.0.0</PackageJsonDependenciesCssSelect>
+    <PackageJsonDependenciesDotenv Condition="$(PackageJsonDependenciesDotenv) == ''">^17.3.1</PackageJsonDependenciesDotenv>
     <PackageJsonDependenciesExpress Condition="$(PackageJsonDependenciesExpress) == ''">^5.2.1</PackageJsonDependenciesExpress>
     <PackageJsonDependenciesKysely Condition="$(PackageJsonDependenciesKysely) == ''">^0.28.11</PackageJsonDependenciesKysely>
     <PackageJsonDependenciesMulter Condition="$(PackageJsonDependenciesMulter) == ''">^2.0.2</PackageJsonDependenciesMulter>
@@ -22,6 +23,7 @@
     <PackageJsonDependenciesReactDom Condition="$(PackageJsonDependenciesReactDom) == ''">^19.2.0</PackageJsonDependenciesReactDom>
     <PackageJsonDependenciesReactRouterDom Condition="$(PackageJsonDependenciesReactRouterDom) == ''">^7.13.0</PackageJsonDependenciesReactRouterDom>
     <PackageJsonDevdependenciesEslintJs Condition="$(PackageJsonDevdependenciesEslintJs) == ''">^9.39.1</PackageJsonDevdependenciesEslintJs>
+    <PackageJsonDevdependenciesTypesMulter Condition="$(PackageJsonDevdependenciesTypesMulter) == ''">^2.0.0</PackageJsonDevdependenciesTypesMulter>
     <PackageJsonDevdependenciesTypesNode Condition="$(PackageJsonDevdependenciesTypesNode) == ''">^24.10.10</PackageJsonDevdependenciesTypesNode>
     <PackageJsonDevdependenciesTypesReact Condition="$(PackageJsonDevdependenciesTypesReact) == ''">^19.2.5</PackageJsonDevdependenciesTypesReact>
     <PackageJsonDevdependenciesTypesReactDom Condition="$(PackageJsonDevdependenciesTypesReactDom) == ''">^19.2.3</PackageJsonDevdependenciesTypesReactDom>
