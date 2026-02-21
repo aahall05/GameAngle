@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import tempLogo from '../assets/TempLogo2.png';
 import '../Stylesheets/Layout.css';
+import { useAuth } from '../AuthContext';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
-    // TODO : change this 
-    const [loggedIn, setLoggedIn] = useState(true);
-
+    const { loggedIn } = useAuth();
+    
     return (
         <div className="site-background">
 
