@@ -30,6 +30,18 @@ async function initDB() {
         time TIME DEFAULT CURRENT_TIME
       );
 
+      CREATE TABLE IF NOT EXISTS Users (
+        id SERIAL PRIMARY KEY,
+        username TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS TeamMembers (
+        id SERIAL PRIMARY KEY,
+        team_id INTEGER REFERENCES Teams(id) ON DELETE CASCADE,
+        user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE
+      );
+
       CREATE INDEX IF NOT EXISTS idx_collages_team_id
         ON Collages(team_id);
 
