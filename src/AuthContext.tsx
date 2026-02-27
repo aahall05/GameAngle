@@ -6,7 +6,7 @@ import { createContext, useContext, useState } from 'react';
 const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
     const [userId, setUserId] = useState<number | null>(null);
 
     return (
