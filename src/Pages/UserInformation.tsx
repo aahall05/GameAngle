@@ -42,7 +42,7 @@ function UserInformation() {
     return (
         <Layout>
             <div className="session-creation-container">
-                <h1>Create Session</h1>
+                <h1>User Information</h1>
                 <form onSubmit={handleSubmit} className="session-form">
                     <div className="form-group">
                         <label htmlFor="firstName">First Name *</label>

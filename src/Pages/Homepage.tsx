@@ -20,7 +20,7 @@ function Homepage() {
                         </button>
                     </Card>
                     <Card className="create-session">
-                        <button onClick={() => navigate('/join-session')}>
+                        <button onClick={() => navigate('/game-viewer')}>
                             Join Session
                         </button>
                     </Card>

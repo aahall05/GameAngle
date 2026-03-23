@@ -9,6 +9,7 @@ import { AuthProvider } from './AuthContext';
 import Login from './Pages/Login';
 import UserInformation from './Pages/UserInformation';
 import UserHomepage from './Pages/UserHomepage.tsx';
+import GameViewer from './Pages/GameViewer.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="/account-page" element={<UserHomepage />} />
                     <Route path="/user-information" element={<UserInformation />} />
                     <Route path="/upload/:collageId" element={<Upload />} />
+                    <Route path="game-viewer" element={<GameViewer />} /> {/*TODO : make this use session ID*/}
                     
                 </Routes>
             </BrowserRouter>

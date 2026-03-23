@@ -1,0 +1,86 @@
+/* outer wrapper */
+.game-viewer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* session title  */
+.game-viewer-header-card {
+    padding: 1rem 1.5rem !important;
+}
+
+    .game-viewer-header-card h2 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+/* video player*/
+.game-viewer-player-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-player {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    background: #000;
+}
+
+/* selection strip */
+.game-viewer-angle-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem !important;
+}
+
+.angle-strip {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    flex: 1;
+    overflow: hidden;
+}
+
+.angle-thumbnail {
+    flex-shrink: 0;
+    width: 160px;
+    height: 100px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #555;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.angle-thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.angle-scroll-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #3a3a3a;
+    padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
+}
+
+    .angle-scroll-btn:hover {
+        color: #000;
+    }
