@@ -9,7 +9,6 @@ function UserInformation() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [organizaitonName, setOrganizationName] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNumber,setPhoneNumber] = useState('');
 
@@ -29,7 +28,6 @@ function UserInformation() {
             sessionId,
             firstName,
             lastName,
-            organizaitonName,
             password,
             phoneNumber
         };
@@ -77,18 +75,6 @@ function UserInformation() {
                             required
                         />
                     </div>
-
-                    <div className="form-group">
-                        <label htmlFor="organizaitonName">Organizaiton Name *</label>
-                        <input
-                            type="text"
-                            id="organizaitonName"
-                            value={organizaitonName}
-                            onChange={(e) => setOrganizationName(e.target.value)}
-                            required
-                        />
-                    </div>
-
 
                     <div className="form-group">
                         <label htmlFor="lastName">Last Name *</label>

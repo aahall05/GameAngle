@@ -12,7 +12,6 @@ function Upload() {
 
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
   const [uploadResult, setUploadResult] = useState<any>(null);
 
@@ -22,7 +21,6 @@ function Upload() {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
       setMessage(null);
-      setProgress(0);
       setUploadResult(null);
     }
   };
@@ -32,7 +30,6 @@ function Upload() {
 
     setUploading(true);
     setMessage(null);
-    setProgress(0);
 
     const formData = new FormData();
     formData.append('video', file);
@@ -54,7 +51,6 @@ function Upload() {
       setUploadResult(data);
       setMessage(`Success! Video uploaded to collage #${data.collageId}`);
       setFile(null);
-      setProgress(100);
 
 
 
@@ -70,10 +66,16 @@ function Upload() {
     <Layout>
       
     <>
-      <div>
-        <img src={tempLogo} className="logo" alt="GameAngle logo" />
-      </div>
+
       <div className="upload-container">
+        <button
+          className="upload-button"
+          onClick={() => navigate(`/game-viewer/${collageIdNum}`)}
+          style={{ marginBottom: '1rem', backgroundColor: '#444' }}
+        >
+          Back to Session Viewer
+        </button>
+
         <input
           type="file"
           accept="video/*"

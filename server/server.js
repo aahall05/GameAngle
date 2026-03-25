@@ -5,10 +5,9 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import 'dotenv/config';
-import { getTeamByName } from './models/teams.js';
-import { createCollage } from './models/collages.js';
+import { createCollage, getCollageById, getRecentCollagesByCreator, searchCollages } from './models/collages.js';
 import { getUserByUsername } from './models/users.js';
-import { createVideo } from './models/videos.js';
+import { createVideo, getVideosByCollage } from './models/videos.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,10 +38,11 @@ function parseCookies(cookieHeader = '') {
     }, {});
 }
 
-function createSession(userId) {
+function createSession(userId, username) {
   const sessionId = crypto.randomBytes(32).toString('hex');
   sessions.set(sessionId, {
     userId,
+    username,
     createdAt: Date.now(),
     expiresAt: Date.now() + SESSION_TTL_MS,
   });
@@ -97,7 +97,7 @@ app.post('/api/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    const sessionId = createSession(user.id);
+    const sessionId = createSession(user.id, user.username);
 
     res.cookie(SESSION_COOKIE_NAME, sessionId, {
       httpOnly: true,
@@ -128,6 +128,7 @@ app.get('/api/auth/session', (req, res) => {
   return res.status(200).json({
     authenticated: true,
     userId: session.userId,
+    username: session.username,
     expiresAt: session.expiresAt,
   });
 });
@@ -248,50 +249,103 @@ app.use('/videofiles', express.static(path.join(__dirname, '..', 'VideoFileStora
 //Create session endpoint
 app.post('/api/sessions', async (req, res) => {
   try {
-    const { eventName, organizationName, date, time, description, createdAt } = req.body;
+    const authSession = getSessionFromRequest(req);
+
+    if (!authSession) {
+      return res.status(401).json({ error: 'You must be logged in to create a session' });
+    }
+
+    const { eventName, date, time, description, createdAt } = req.body;
 
     //Validate required fields
-    if (!eventName || !organizationName || !date || !time) {
+    if (!eventName || !date || !time) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    //Look up team by organization name
-    const team = await getTeamByName(organizationName);
+    const collage = await createCollage({
+      name: eventName,
+      creator_user_id: authSession.userId,
+      created_at: createdAt || null
+    });
 
-    if (!team) {
-      return res.status(404).json({ error: `Team with name "${organizationName}" not found` });
-    }
-
-    if (team) {
-      // create collage with the team_id
-      const collage = await createCollage({
-        team_id: team.id,
-        name: eventName,
-        created_at: createdAt || null
-      });
-
-      res.status(201).json({
-        message: 'Session created successfully',
-        collage,
-        team_id: team.id,
-        session: {
-          collageId: collage.id,
-          eventName,
-          organizationName,
-          teamId: team.id,
-          date,
-          time,
-          description,
-          createdAt
-        }
-        });
+    res.status(201).json({
+      message: 'Session created successfully',
+      collage,
+      session: {
+        collageId: collage.id,
+        eventName,
+        date,
+        time,
+        description,
+        createdAt
       }
+      });
+      
     }
   catch (err) {
     console.error('Upload error:', err);
     res.status(500).json({ error: err.message || 'Upload failed' });
   }
     
+});
+
+app.get('/api/users/me/recent-sessions', async (req, res) => {
+  try {
+    const authSession = getSessionFromRequest(req);
+
+    if (!authSession) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    const sessionsList = await getRecentCollagesByCreator(authSession.userId, 5);
+
+    return res.status(200).json({
+      sessions: sessionsList,
+    });
+  } catch (err) {
+    console.error('Fetch recent sessions error:', err);
+    return res.status(500).json({ error: err.message || 'Failed to fetch recent sessions' });
+  }
+});
+
+app.get('/api/collages/:collageId/videos', async (req, res) => {
+  try {
+    const collageId = parseInt(req.params.collageId, 10);
+
+    if (Number.isNaN(collageId)) {
+      return res.status(400).json({ error: 'Invalid collageId' });
+    }
+
+    const collage = await getCollageById(collageId);
+
+    if (!collage) {
+      return res.status(404).json({ error: 'Collage not found' });
+    }
+
+    const videos = await getVideosByCollage(collageId);
+
+    return res.status(200).json({
+      collage,
+      videos,
+    });
+  } catch (err) {
+    console.error('Fetch collage videos error:', err);
+    return res.status(500).json({ error: err.message || 'Failed to fetch collage videos' });
+  }
+});
+
+app.get('/api/sessions', async (req, res) => {
+  try {
+    const search = typeof req.query.search === 'string' ? req.query.search : '';
+    const sessionsList = await searchCollages(search);
+
+    return res.status(200).json({
+      sessions: sessionsList,
+    });
+  } catch (err) {
+    console.error('Fetch sessions error:', err);
+    return res.status(500).json({ error: err.message || 'Failed to fetch sessions' });
+  }
 });
 
 

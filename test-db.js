@@ -2,16 +2,13 @@
 import 'dotenv/config'; // automatically loads .env
 import pool from './server/db.js'; // import the pool
 import { 
-  createTeam, getTeamsByOwner, getTeamByid 
-} from './server/models/teams.js';
-import { 
-  createCollage, getCollagesByTeam, getCollageById 
+  createCollage, getCollageById 
 } from './server/models/collages.js';
 import { 
   createVideo, getVideosByCollage, getVideoById 
 } from './server/models/videos.js';
 import {
-  createUser, getTeamsByUser, getUserById, getUserByUsername, addUserToTeam, removeUserFromTeam
+  createUser, getUserById, getUserByUsername
 } from './server/models/users.js';
 
 async function testDBFunctions() {
@@ -21,22 +18,9 @@ async function testDBFunctions() {
     console.log('✅ Database connected successfully!');
     console.log('Current time in DB:', res.rows[0].now);
 
-    console.log('\n--- Testing Teams ---');
-    const newTeam = await createTeam({ name: 'Test Team', owner_id: 12345 });
-    console.log('Created team:', newTeam);
-
-    const teamsByOwner = await getTeamsByOwner(12345);
-    console.log('Teams by owner 12345:', teamsByOwner);
-
-    const fetchedTeam = await getTeamByid(newTeam.id);
-    console.log('Fetched team by ID:', fetchedTeam);
-
     console.log('\n--- Testing Collages ---');
-    const newCollage = await createCollage({ team_id: newTeam.id, name: 'Test Collage' });
+    const newCollage = await createCollage({ name: 'Test Collage' });
     console.log('Created collage:', newCollage);
-
-    const collagesForTeam = await getCollagesByTeam(newTeam.id);
-    console.log('Collages for team:', collagesForTeam);
 
     const fetchedCollage = await getCollageById(newCollage.id);
     console.log('Fetched collage by ID:', fetchedCollage);
@@ -59,8 +43,14 @@ async function testDBFunctions() {
     console.log('Fetched video by ID:', fetchedVideo);
 
     console.log('\n--- Testing Users ---');
-    const newUser = await createUser({ username: 'Coach', password_hash: 12345 });
+    const newUser = await createUser({ username: `Coach`, password_hash: '12345' });
     console.log('Created user:', newUser);
+
+    const fetchedUserById = await getUserById(newUser.id);
+    console.log('Fetched user by ID:', fetchedUserById);
+
+    const fetchedUserByUsername = await getUserByUsername(fetchedUserById.username);
+    console.log('Fetched user by username:', fetchedUserByUsername);
 
   } catch (err) {
     console.error('❌ Error testing DB functions:', err);

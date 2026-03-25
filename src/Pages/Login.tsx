@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Layout from './Layout';
 
 const Login = () => {
-    const { setLoggedIn, setUserId } = useAuth();
+    const { setLoggedIn, setUserId, setUsername } = useAuth();
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [username, setUsernameInput] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,11 +34,13 @@ const Login = () => {
             }
 
             setUserId(data.userId);
+            setUsername(data.username ?? null);
             setLoggedIn(true);
             navigate('/');
         } catch (error) {
             setLoggedIn(false);
             setUserId(null);
+            setUsername(null);
             setErrorMessage(error instanceof Error ? error.message : 'Login failed');
         } finally {
             setIsSubmitting(false);
@@ -56,7 +58,7 @@ const Login = () => {
                             type="text"
                             id="username"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => setUsernameInput(e.target.value)}
                             required
                         />
                     </div>

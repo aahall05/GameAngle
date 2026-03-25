@@ -8,6 +8,8 @@ type AuthContextType = {
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
     userId: number | null;
     setUserId: React.Dispatch<React.SetStateAction<number | null>>;
+    username: string | null;
+    setUsername: React.Dispatch<React.SetStateAction<string | null>>;
     authLoading: boolean;
 };
 
@@ -16,6 +18,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userId, setUserId] = useState<number | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
     const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
@@ -29,16 +32,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 if (!response.ok) {
                     setLoggedIn(false);
                     setUserId(null);
+                    setUsername(null);
                     return;
                 }
 
                 const data = await response.json();
                 setLoggedIn(Boolean(data.authenticated));
                 setUserId(data.userId ?? null);
+                setUsername(data.username ?? null);
             } catch (error) {
                 console.error('Session check failed:', error);
                 setLoggedIn(false);
                 setUserId(null);
+                setUsername(null);
             } finally {
                 setAuthLoading(false);
             }
@@ -48,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ loggedIn, setLoggedIn, userId, setUserId, authLoading }}>
+        <AuthContext.Provider value={{ loggedIn, setLoggedIn, userId, setUserId, username, setUsername, authLoading }}>
             {children}
         </AuthContext.Provider>
     );

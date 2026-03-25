@@ -8,7 +8,6 @@ function SessionCreation() {
 
     const navigate = useNavigate();
     const [eventName, setEventName] = useState('');
-    const [organizationName, setOrganizationName] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [description, setDescription] = useState('');
@@ -28,7 +27,6 @@ function SessionCreation() {
         const sessionData = {
             sessionId,
             eventName,
-            organizationName,
             date,
             time,
             description,
@@ -42,6 +40,7 @@ function SessionCreation() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify(sessionData)
             });
 
@@ -74,17 +73,6 @@ function SessionCreation() {
                             id="eventName"
                             value={eventName}
                             onChange={(e) => setEventName(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="organizationName">Organization Name *</label>
-                        <input
-                            type="text"
-                            id="organizationName"
-                            value={organizationName}
-                            onChange={(e) => setOrganizationName(e.target.value)}
                             required
                         />
                     </div>

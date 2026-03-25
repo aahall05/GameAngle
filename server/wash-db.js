@@ -7,7 +7,6 @@ async function washDB() {
     await pool.query(`
       DROP TABLE IF EXISTS Videos CASCADE;
       DROP TABLE IF EXISTS Collages CASCADE;
-      DROP TABLE IF EXISTS Teams CASCADE;
       DROP TABLE IF EXISTS Users CASCADE;
     `);
 
