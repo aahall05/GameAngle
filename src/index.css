@@ -24,13 +24,18 @@ a:hover {
 
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: 800px;
   min-height: 100vh;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #000000
+}
+
+h2 {
+  font-size: 1.5em;
   color: #000000
 }
 
@@ -65,4 +70,10 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+.title-card {
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
 }

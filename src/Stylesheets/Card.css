@@ -2,4 +2,25 @@
     background: #b9cdb0;
     border-radius: 12px;
     padding: 2rem;
+    min-width: 350px;
+}
+.session-card {
+    background: #e6f5df;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    min-width: 300px;
+}
+
+.session-card-title {
+    font-size: 0.95rem;
+    color: black;
+}
+
+.session-card-buttons {
+    display: flex;
+    gap: 0.5rem;
 }

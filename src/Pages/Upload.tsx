@@ -1,89 +1,81 @@
 import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';  
 import tempLogo from '../assets/TempLogo2.png';
 import '../Stylesheets/Upload.css';
-import Layout from './Layout'
+import Layout from './Layout';
 
 function Upload() {
+  const { collageId } = useParams(); // gets string from /upload/:collageId
+  const collageIdNum = collageId ? parseInt(collageId, 10) : null;
+
+  const navigate = useNavigate();
+
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
   const [uploadResult, setUploadResult] = useState<any>(null);
+
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
       setMessage(null);
-      setProgress(0);
       setUploadResult(null);
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {  
     if (!file) return;
 
     setUploading(true);
     setMessage(null);
-    setProgress(0);
 
     const formData = new FormData();
     formData.append('video', file);
 
-    const xhr = new XMLHttpRequest();
+    try {
+      const response = await fetch(`http://localhost:3000/api/upload/${collageIdNum}`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',           //ession cookie for auth later
+      });
 
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        setProgress(percentComplete);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server error (${response.status})`);
       }
-    };
 
-    xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-            const percent = Math.round((event.loaded / event.total) * 100);
-            console.log('Progress:', percent, '%', event.loaded, '/', event.total);
-            setProgress(percent);
-        } else {
-            console.log('Progress not computable');
-        }
-        };
+      const data = await response.json();
+
+      setUploadResult(data);
+      setMessage(`Success! Video uploaded to collage #${data.collageId}`);
+      setFile(null);
 
 
 
-    xhr.onload = () => {
+    } catch (err: any) {
+      setMessage(`Upload failed: ${err.message}`);
+      console.error(err);
+    } finally {
       setUploading(false);
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const data = JSON.parse(xhr.responseText);
-          setUploadResult(data);
-          setMessage(`Success! Video saved as: ${data.filename}`);
-          setFile(null); // optional: clear selection
-          setProgress(0);
-        } catch (e) {
-          setMessage('Upload succeeded but response parsing failed');
-        }
-      } else {
-        setMessage(`Upload failed: ${xhr.statusText || 'Server error'}`);
-      }
-    };
-
-    xhr.onerror = () => {
-      setUploading(false);
-      setMessage('Network error during upload');
-    };
-
-    xhr.open('POST', 'http://localhost:3000/api/upload-video', true);
-    xhr.send(formData);
+    }
   };
 
     return (
     <Layout>
       
     <>
-      <div>
-        <img src={tempLogo} className="logo" alt="GameAngle logo" />
-      </div>
+
       <div className="upload-container">
+        <button
+          className="upload-button"
+          onClick={() => navigate(`/game-viewer/${collageIdNum}`)}
+          style={{ marginBottom: '1rem', backgroundColor: '#444' }}
+        >
+          Back to Session Viewer
+        </button>
+
         <input
           type="file"
           accept="video/*"

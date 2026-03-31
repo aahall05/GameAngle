@@ -1,11 +1,30 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css'
 import Homepage from './Pages/Homepage.tsx'
 import SessionCreation from './Pages/SessionCreation'
-import { AuthProvider } from './AuthContext';
+import Upload from './Pages/Upload'
+import { AuthProvider, useAuth } from './AuthContext';
 import Login from './Pages/Login';
+import UserInformation from './Pages/UserInformation';
+import UserHomepage from './Pages/UserHomepage.tsx';
+import GameViewer from './Pages/GameViewer.tsx';
+import JoinSessions from './Pages/JoinSessions.tsx';
+
+const HomeRoute = () => {
+    const { loggedIn, authLoading } = useAuth();
+
+    if (authLoading) {
+        return null;
+    }
+
+    if (loggedIn) {
+        return <UserHomepage />;
+    }
+
+    return <Homepage />;
+};
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -13,13 +32,16 @@ createRoot(document.getElementById('root')!).render(
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Homepage />} />
+                    <Route path="/" element={<HomeRoute />} />
+                    <Route path="/homepage" element={<Homepage />} />
                     <Route path="/create-session" element={<SessionCreation />} />
                     <Route path="/login-page" element={<Login />} />
-                    {/* 
-                        add account page
-                        add 
-                    */}
+                    <Route path="/account-page" element={<UserHomepage />} />
+                    <Route path="/user-information" element={<UserInformation />} />
+                    <Route path="/upload/:collageId" element={<Upload />} />
+                    <Route path="/game-viewer/:collageId" element={<GameViewer />} /> {/*TODO : make this use session ID*/}
+                    <Route path="/join-sessions" element={<JoinSessions />} />
+                    
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

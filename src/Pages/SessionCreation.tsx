@@ -8,7 +8,6 @@ function SessionCreation() {
 
     const navigate = useNavigate();
     const [eventName, setEventName] = useState('');
-    const [organizationName, setOrganizationName] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [description, setDescription] = useState('');
@@ -18,27 +17,48 @@ function SessionCreation() {
         return Math.random().toString(36).substring(2, 10);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const sessionId = generateSessionId();
         const createdAt = new Date().toISOString(); 
 
         // container to hold session data
-        // for now just logs to console, but get the information from this object to send to the backend
         const sessionData = {
             sessionId,
             eventName,
-            organizationName,
             date,
             time,
             description,
             createdAt
         };
-        console.log('Session created:', sessionData);
 
-        // redirect to upload page with the session ID
-        // navigate(`/upload/${sessionId}`);
+        try {
+            // Send data to backend
+            const response = await fetch('http://localhost:3000/api/sessions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(sessionData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to create session');
+            }
+
+            console.log('Session created:', data);
+            alert(`Session created successfully! Collage ID: ${data.collage.id}`);
+
+            // redirect to upload page with the collage ID
+            navigate(`/upload/${data.collage.id}`);
+        } catch (error) {
+            console.error('Error creating session:', error);
+            alert(error instanceof Error ? error.message : 'Failed to create session');
+        }
     };
 
     return (
@@ -53,17 +73,6 @@ function SessionCreation() {
                             id="eventName"
                             value={eventName}
                             onChange={(e) => setEventName(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="organizationName">Organization Name *</label>
-                        <input
-                            type="text"
-                            id="organizationName"
-                            value={organizationName}
-                            onChange={(e) => setOrganizationName(e.target.value)}
                             required
                         />
                     </div>

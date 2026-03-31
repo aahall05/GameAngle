@@ -72,7 +72,7 @@ export default defineConfig([
 ])
 ```
 # GameSync
-GameSync is a video synchronization and storage platform meant to provde a place for local sports teams to upload and view their games from multiple angles
+GameSync is a video synchronization and storage platform meant to provide a place for local sports communities to upload and view their games from multiple angles
 
 # How to Run
 To run server:

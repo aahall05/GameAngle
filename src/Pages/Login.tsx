@@ -4,21 +4,47 @@ import { useState } from 'react';
 import Layout from './Layout';
 
 const Login = () => {
-    const { setLoggedIn } = useAuth();
+    const { setLoggedIn, setUserId, setUsername } = useAuth();
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [username, setUsernameInput] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        // TODO : implement login verification and pass in userID on success
-        // make a POST request to your backend endpoint (e.g. http://localhost:3000/api/login)
-        // send username and password in the request body as JSON
-        // if response.ok, call setUserId(data.userId) and setLoggedIn(true) then navigate('/')
-        // if response fails, display an error message to the user
-        setLoggedIn(true);
-        navigate('/');
+
+        setErrorMessage('');
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Invalid username or password');
+            }
+
+            setUserId(data.userId);
+            setUsername(data.username ?? null);
+            setLoggedIn(true);
+            navigate('/');
+        } catch (error) {
+            setLoggedIn(false);
+            setUserId(null);
+            setUsername(null);
+            setErrorMessage(error instanceof Error ? error.message : 'Login failed');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -32,7 +58,7 @@ const Login = () => {
                             type="text"
                             id="username"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => setUsernameInput(e.target.value)}
                             required
                         />
                     </div>
@@ -48,9 +74,15 @@ const Login = () => {
                         />
                     </div>
 
-                    <button type="submit" className="submit-button">
-                        Log In
+                    <button type="submit" className="submit-button" disabled={isSubmitting}>
+                        {isSubmitting ? 'Logging In...' : 'Log In'}
                     </button>
+
+                    {errorMessage && (
+                        <p role="alert" style={{ color: 'red', marginTop: '10px' }}>
+                            {errorMessage}
+                        </p>
+                    )}
                 </form>
             </div>
         </Layout>
