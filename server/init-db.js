@@ -42,6 +42,12 @@ async function initDB() {
         user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE
       );
 
+      CREATE TABLE IF NOT EXISTS Thumbnails (
+        id SERIAL PRIMARY KEY,
+        video_id INTEGER REFERENCES Videos(id) ON DELETE CASCADE,
+        path TEXT NOT NULL
+      );
+
       CREATE INDEX IF NOT EXISTS idx_collages_team_id
         ON Collages(team_id);
 
