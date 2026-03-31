@@ -33,30 +33,12 @@ async function initDB() {
         time TIME DEFAULT CURRENT_TIME
       );
 
-<<<<<<< HEAD
-      CREATE TABLE IF NOT EXISTS Users (
-        id SERIAL PRIMARY KEY,
-        username TEXT NOT NULL UNIQUE,
-        password_hash TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS TeamMembers (
-        id SERIAL PRIMARY KEY,
-        team_id INTEGER REFERENCES Teams(id) ON DELETE CASCADE,
-        user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE
-      );
-
       CREATE TABLE IF NOT EXISTS Thumbnails (
         id SERIAL PRIMARY KEY,
         video_id INTEGER REFERENCES Videos(id) ON DELETE CASCADE,
-        path TEXT NOT NULL
+        path TEXT NOT NULL,
       );
 
-      CREATE INDEX IF NOT EXISTS idx_collages_team_id
-        ON Collages(team_id);
-
-=======
->>>>>>> ebbd5cba6a33e1a7b5fc960de643608bad63fe9b
       CREATE INDEX IF NOT EXISTS idx_videos_collage_id
         ON Videos(collage_id);
 
