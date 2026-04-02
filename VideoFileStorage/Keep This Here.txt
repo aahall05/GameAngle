@@ -1,0 +1,1 @@
+If directory is empty, it will not save to github

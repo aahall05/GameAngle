@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import tempLogo from '../assets/TempLogo2.png';
 import '../Stylesheets/Layout.css';
@@ -7,7 +7,26 @@ import { useAuth } from '../AuthContext';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
-    const { loggedIn, username } = useAuth();
+    const { loggedIn, username, setLoggedIn, setUserId, setUsername } = useAuth();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    const handleLogout = async () => {
+        try {
+            setIsLoggingOut(true);
+            await fetch('http://localhost:3000/api/logout', {
+                method: 'POST',
+                credentials: 'include',
+            });
+        } catch (error) {
+            console.error('Logout failed:', error);
+        } finally {
+            setLoggedIn(false);
+            setUserId(null);
+            setUsername(null);
+            setIsLoggingOut(false);
+            navigate('/');
+        }
+    };
     
     return (
         <div className="site-background">
@@ -28,6 +47,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <>
                         <span>{username ? `@${username}` : 'User'}</span>
                         <button onClick={() => navigate('/account-page')}>Account</button>
+                        <button onClick={handleLogout} disabled={isLoggingOut}>
+                            {isLoggingOut ? 'Logging Out...' : 'Log Out'}
+                        </button>
                     </>
                 ) : (
                     <button onClick={() => navigate('/login-page')}>Log In</button>

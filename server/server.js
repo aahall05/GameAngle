@@ -1,3 +1,4 @@
+import ffmpeg from 'fluent-ffmpeg';
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
@@ -207,34 +208,102 @@ app.post('/api/upload/:collageId', upload.single('video'), async (req, res) => {
       return res.status(400).json({ error: 'No video file received' });
     }
 
-    // Get collageId from URL parameter
     const collageId = parseInt(req.params.collageId, 10);
+    if (Number.isNaN(collageId)) {
+      return res.status(400).json({ error: 'Invalid collageId' });
+    }
+
+    const videoPath = req.file.path;   
+    let createdAtValue = null;
+    let timeValue = null;
+    let lengthSecondsValue = null;
 
 
+    const durationRaw = typeof req.body.duration === 'string' ? req.body.duration : '';
+    if (durationRaw) {
+      const parsed = Number.parseInt(durationRaw, 10);
+      if (!Number.isNaN(parsed) && parsed >= 0) {
+        lengthSecondsValue = parsed;
+      }
+    }
 
-    const relativePath = `/videofiles/${req.file.filename}`;  // note: matches your static route
+
+    await new Promise((resolve) => {
+      ffmpeg.ffprobe(videoPath, (err, metadata) => {
+        if (err) {
+          console.error('ffprobe error:', err);
+          resolve();
+          return;
+        }
+
+
+        let dateStr = metadata.format?.tags?.creationdate ||
+                      metadata.format?.tags?.['com.apple.quicktime.creationdate'];
+
+
+        if (!dateStr) {
+          dateStr = metadata.format?.tags?.creation_time;
+        }
+
+        if (dateStr) {
+          const parsedDate = new Date(dateStr);
+          if (!isNaN(parsedDate.getTime())) {
+            createdAtValue = parsedDate.toISOString().slice(0, 10);     // YYYY-MM-DD
+            timeValue      = parsedDate.toISOString().slice(11, 19);    // HH:MM:SS
+          }
+        }
+
+        if (!lengthSecondsValue && metadata.format?.duration) {
+          lengthSecondsValue = Math.round(metadata.format.duration);
+        }
+
+        resolve();
+      });
+    });
+
+      //fallback
+    if (!createdAtValue) {
+      const createDateRaw = typeof req.body.create_date === 'string' ? req.body.create_date : '';
+      if (createDateRaw) {
+        const parsedDate = new Date(createDateRaw);
+        if (!isNaN(parsedDate.getTime())) {
+          createdAtValue = parsedDate.toISOString().slice(0, 10);
+          timeValue = parsedDate.toISOString().slice(11, 19);
+        }
+      }
+    }
+
+    if (!lengthSecondsValue) {
+      lengthSecondsValue = 0; 
+    }
+
+
+    const relativePath = `/videofiles/${req.file.filename}`;
     const fullPath = path.join(__dirname, '..', 'VideoFileStorage', req.file.filename);
-
 
     await createVideo({
       collage_id: collageId,
       filename: req.file.filename,
       original_name: req.file.originalname,
       path: relativePath,
+      length_seconds: lengthSecondsValue,
       size: req.file.size,
-      mime_type: req.file.mimetype,
-      createdAt: Date().now,
+      created_at: createdAtValue,
+      time: timeValue,
     });
 
     res.status(201).json({
       message: 'Video uploaded successfully',
-      collageId,                    // ← important for frontend
+      collageId,
       filename: req.file.filename,
       originalName: req.file.originalname,
       path: relativePath,
-      fullPath,                     // mostly for debugging/server-side
+      created_at: createdAtValue,
+      time: timeValue,
+      length_seconds: lengthSecondsValue,
       size: req.file.size,
     });
+
   } catch (err) {
     console.error('Upload error:', err);
     res.status(500).json({ error: err.message || 'Upload failed' });

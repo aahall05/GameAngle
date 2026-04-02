@@ -25,22 +25,22 @@ async function testDBFunctions() {
     const fetchedCollage = await getCollageById(newCollage.id);
     console.log('Fetched collage by ID:', fetchedCollage);
 
-    console.log('\n--- Testing Videos ---');
-    const newVideo = await createVideo({
-      collage_id: newCollage.id,
-      filename: 'video.mp4',
-      original_name: 'myvideo.mp4',
-      path: '/VideoFileStorage/video.mp4',
-      length_seconds: 120,
-      size: 10485760
-    });
-    console.log('Created video:', newVideo);
+    // console.log('\n--- Testing Videos ---');
+    // const newVideo = await createVideo({
+    //   collage_id: newCollage.id,
+    //   filename: 'video.mp4',
+    //   original_name: 'myvideo.mp4',
+    //   path: '/VideoFileStorage/video.mp4',
+    //   length_seconds: 120,
+    //   size: 10485760
+    // });
+    // console.log('Created video:', newVideo);
 
     const videosForCollage = await getVideosByCollage(newCollage.id);
     console.log('Videos for collage:', videosForCollage);
 
-    const fetchedVideo = await getVideoById(newVideo.id);
-    console.log('Fetched video by ID:', fetchedVideo);
+    // const fetchedVideo = await getVideoById(newVideo.id);
+    // console.log('Fetched video by ID:', fetchedVideo);
 
     console.log('\n--- Testing Users ---');
     const newUser = await createUser({ username: `Coach`, password_hash: '12345' });

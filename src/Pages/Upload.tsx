@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';  
-import tempLogo from '../assets/TempLogo2.png';
 import '../Stylesheets/Upload.css';
 import Layout from './Layout';
 
@@ -11,15 +10,48 @@ function Upload() {
   const navigate = useNavigate();
 
   const [file, setFile] = useState<File | null>(null);
+  const [createDate, setCreateDate] = useState('');
+  const [duration, setDuration] = useState('');
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [uploadResult, setUploadResult] = useState<any>(null);
 
+  const extractVideoDuration = (videoFile: File): Promise<number | null> => {
+    return new Promise((resolve) => {
+      const objectUrl = URL.createObjectURL(videoFile);
+      const videoElement = document.createElement('video');
 
+      videoElement.preload = 'metadata';
+      videoElement.onloadedmetadata = () => {
+        const rawDuration = Number.isFinite(videoElement.duration) ? videoElement.duration : NaN;
+        URL.revokeObjectURL(objectUrl);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (Number.isNaN(rawDuration) || rawDuration < 0) {
+          resolve(null);
+          return;
+        }
+
+        resolve(Math.round(rawDuration));
+      };
+
+      videoElement.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(null);
+      };
+
+      videoElement.src = objectUrl;
+    });
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
+      const selectedFile = event.target.files[0];
+      setFile(selectedFile);
+      setCreateDate(new Date(selectedFile.lastModified).toISOString());
+
+      const extractedDuration = await extractVideoDuration(selectedFile);
+      setDuration(extractedDuration !== null ? String(extractedDuration) : '');
+
       setMessage(null);
       setUploadResult(null);
     }
@@ -33,6 +65,8 @@ function Upload() {
 
     const formData = new FormData();
     formData.append('video', file);
+    formData.append('create_date', createDate);
+    formData.append('duration', duration);
 
     try {
       const response = await fetch(`http://localhost:3000/api/upload/${collageIdNum}`, {
@@ -91,6 +125,8 @@ function Upload() {
         {file && (
           <div className="file-info">
             Selected: {file.name} ({(file.size / (1024 * 1024)).toFixed(1)} MB)
+            <br />
+            Auto metadata: create_date={createDate || 'unknown'}, duration={duration || 'unknown'}s
           </div>
         )}
 
