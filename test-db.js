@@ -18,12 +18,6 @@ async function testDBFunctions() {
     console.log('✅ Database connected successfully!');
     console.log('Current time in DB:', res.rows[0].now);
 
-    console.log('\n--- Testing Collages ---');
-    const newCollage = await createCollage({ name: 'Test Collage' });
-    console.log('Created collage:', newCollage);
-
-    const fetchedCollage = await getCollageById(newCollage.id);
-    console.log('Fetched collage by ID:', fetchedCollage);
 
     // console.log('\n--- Testing Videos ---');
     // const newVideo = await createVideo({
@@ -36,8 +30,7 @@ async function testDBFunctions() {
     // });
     // console.log('Created video:', newVideo);
 
-    const videosForCollage = await getVideosByCollage(newCollage.id);
-    console.log('Videos for collage:', videosForCollage);
+  
 
     // const fetchedVideo = await getVideoById(newVideo.id);
     // console.log('Fetched video by ID:', fetchedVideo);
@@ -51,6 +44,17 @@ async function testDBFunctions() {
 
     const fetchedUserByUsername = await getUserByUsername(fetchedUserById.username);
     console.log('Fetched user by username:', fetchedUserByUsername);
+
+    console.log('\n--- Testing Collages ---');
+    const newCollage = await createCollage({ name: 'Test Collage' , creator_user_id: 1});
+    console.log('Created collage:', newCollage);
+
+    const videosForCollage = await getVideosByCollage(newCollage.id);
+    console.log('Videos for collage:', videosForCollage);
+
+    const fetchedCollage = await getCollageById(newCollage.id);
+    console.log('Fetched collage by ID:', fetchedCollage);
+
 
   } catch (err) {
     console.error('❌ Error testing DB functions:', err);

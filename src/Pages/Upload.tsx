@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';  
+import { useEffect, useMemo, useState } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';  
 import '../Stylesheets/Upload.css';
 import Layout from './Layout';
+import { useAuth } from '../AuthContext';
 
 function Upload() {
   const { collageId } = useParams(); // gets string from /upload/:collageId
   const collageIdNum = collageId ? parseInt(collageId, 10) : null;
+  const [searchParams] = useSearchParams();
+  const { userId, loggedIn } = useAuth();
 
   const navigate = useNavigate();
 
@@ -15,6 +18,53 @@ function Upload() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [uploadResult, setUploadResult] = useState<any>(null);
+  const [isOwner, setIsOwner] = useState(false);
+
+  const showSharePanel = searchParams.get('share') === '1';
+
+  const uploadLink = useMemo(() => {
+    if (!collageIdNum) {
+      return '';
+    }
+
+    return `${window.location.origin}/upload/${collageIdNum}`;
+  }, [collageIdNum]);
+
+  const qrCodeUrl = useMemo(() => {
+    if (!uploadLink) {
+      return '';
+    }
+
+    return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(uploadLink)}`;
+  }, [uploadLink]);
+
+  useEffect(() => {
+    const checkOwnership = async () => {
+      if (!collageIdNum || !loggedIn || userId === null) {
+        setIsOwner(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/collages/${collageIdNum}/videos`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          setIsOwner(false);
+          return;
+        }
+
+        const data = await response.json();
+        setIsOwner(data.collage?.creator_user_id === userId);
+      } catch (error) {
+        setIsOwner(false);
+      }
+    };
+
+    checkOwnership();
+  }, [collageIdNum, loggedIn, userId]);
 
   const extractVideoDuration = (videoFile: File): Promise<number | null> => {
     return new Promise((resolve) => {
@@ -102,6 +152,14 @@ function Upload() {
     <>
 
       <div className="upload-container">
+        {showSharePanel && isOwner && uploadLink && (
+          <div className="share-panel">
+            <h3>Share Upload Link</h3>
+            <p className="share-link">{uploadLink}</p>
+            <img className="share-qr" src={qrCodeUrl} alt="Upload QR code" />
+          </div>
+        )}
+
         <button
           className="upload-button"
           onClick={() => navigate(`/game-viewer/${collageIdNum}`)}

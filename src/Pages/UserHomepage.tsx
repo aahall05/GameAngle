@@ -73,7 +73,7 @@ function UserHomepage() {
                                 key={session.id}
                                 title={`${session.name} - ${new Date(session.created_at).toLocaleDateString()}`}
                                 onView={() => navigate(`/game-viewer/${session.id}`)}
-                                onShare={() => navigator.clipboard.writeText(`${window.location.origin}/game-viewer/${session.id}`)}
+                                onShare={() => navigate(`/upload/${session.id}?share=1`)}
                             />
                         ))}
                     </Card>
