@@ -1,58 +1,72 @@
-import { useAuth } from '../AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Layout from './Layout';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
-const Login = () => {
-    const { setLoggedIn, setUserId, setUsername } = useAuth();
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+const Signup = () => {
+    const { loggedIn, authLoading, setLoggedIn, setUserId, setUsername: setAuthUsername } = useAuth();
     const navigate = useNavigate();
+
     const [username, setUsernameInput] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
+    useEffect(() => {
+        if (!authLoading && loggedIn) {
+            navigate('/');
+        }
+    }, [authLoading, loggedIn, navigate]);
 
+    const handleSignup = async (e: React.FormEvent) => {
+        e.preventDefault();
         setErrorMessage('');
-        setIsSubmitting(true);
+
+        const nextUsername = username.trim();
+        if (!nextUsername || !password) {
+            setErrorMessage('Username and password are required.');
+            return;
+        }
 
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
+            setIsSubmitting(true);
+            const response = await fetch(`${API_BASE}/api/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username: nextUsername, password }),
             });
 
-            const data = await response.json();
+            const data = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-                throw new Error(data.error || 'Invalid username or password');
+                throw new Error(data.error || 'Signup failed');
             }
 
-            setUserId(data.userId);
-            setUsername(data.username ?? null);
             setLoggedIn(true);
+            setUserId(data.userId ?? null);
+            setAuthUsername(data.username ?? null);
             navigate('/');
         } catch (error) {
-            setLoggedIn(false);
-            setUserId(null);
-            setUsername(null);
-            setErrorMessage(error instanceof Error ? error.message : 'Login failed');
+            setErrorMessage(error instanceof Error ? error.message : 'Signup failed');
         } finally {
             setIsSubmitting(false);
         }
     };
 
+    if (authLoading) {
+        return null;
+    }
+
     return (
         <Layout>
             <div className="session-creation-container">
-                <h1>Log In</h1>
-                <form onSubmit={handleLogin} className="session-form">
+                <h1>Sign Up</h1>
+                <form onSubmit={handleSignup} className="session-form">
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input
@@ -76,7 +90,7 @@ const Login = () => {
                     </div>
 
                     <button type="submit" className="submit-button" disabled={isSubmitting}>
-                        {isSubmitting ? 'Logging In...' : 'Log In'}
+                        {isSubmitting ? 'Creating Account...' : 'Sign Up'}
                     </button>
 
                     {errorMessage && (
@@ -86,11 +100,12 @@ const Login = () => {
                     )}
 
                     <p style={{ marginTop: '12px' }}>
-                        Need an account? <Link to="/signup">Sign Up</Link>
+                        Already have an account? <Link to="/login-page">Log In</Link>
                     </p>
                 </form>
             </div>
         </Layout>
     );
 };
-export default Login;
+
+export default Signup;

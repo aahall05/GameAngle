@@ -7,10 +7,12 @@ import SessionCreation from './Pages/SessionCreation'
 import Upload from './Pages/Upload'
 import { AuthProvider, useAuth } from './AuthContext';
 import Login from './Pages/Login';
+import Signup from './Pages/Signup';
 import UserInformation from './Pages/UserInformation';
 import UserHomepage from './Pages/UserHomepage.tsx';
 import GameViewer from './Pages/GameViewer.tsx';
 import JoinSessions from './Pages/JoinSessions.tsx';
+import { Navigate } from 'react-router-dom';
 
 const HomeRoute = () => {
     const { loggedIn, authLoading } = useAuth();
@@ -26,6 +28,20 @@ const HomeRoute = () => {
     return <Homepage />;
 };
 
+const GuestOnlyRoute = ({ children }: { children: React.ReactNode }) => {
+    const { loggedIn, authLoading } = useAuth();
+
+    if (authLoading) {
+        return null;
+    }
+
+    if (loggedIn) {
+        return <Navigate to="/" replace />;
+    }
+
+    return <>{children}</>;
+};
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
         {/*<Upload/>*/}
@@ -35,7 +51,22 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="/" element={<HomeRoute />} />
                     <Route path="/homepage" element={<Homepage />} />
                     <Route path="/create-session" element={<SessionCreation />} />
-                    <Route path="/login-page" element={<Login />} />
+                    <Route
+                        path="/login-page"
+                        element={(
+                            <GuestOnlyRoute>
+                                <Login />
+                            </GuestOnlyRoute>
+                        )}
+                    />
+                    <Route
+                        path="/signup"
+                        element={(
+                            <GuestOnlyRoute>
+                                <Signup />
+                            </GuestOnlyRoute>
+                        )}
+                    />
                     <Route path="/account-page" element={<UserHomepage />} />
                     <Route path="/user-information" element={<UserInformation />} />
                     <Route path="/upload/:collageId" element={<Upload />} />

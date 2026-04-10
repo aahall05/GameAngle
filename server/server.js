@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import 'dotenv/config';
 import { createCollage, getCollageById, getRecentCollagesByCreator, searchCollages } from './models/collages.js';
-import { getUserByUsername } from './models/users.js';
+import { createUser, getUserByUsername, getUserById, updateUsernameById, updatePasswordById } from './models/users.js';
 import { createVideo, getVideosByCollage } from './models/videos.js';
 
 const app = express();
@@ -83,6 +83,48 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+app.post('/api/signup', async (req, res) => {
+  try {
+    const { username, password } = req.body || {};
+    const nextUsername = typeof username === 'string' ? username.trim() : '';
+    const nextPassword = typeof password === 'string' ? password : '';
+
+    if (!nextUsername || !nextPassword) {
+      return res.status(400).json({ error: 'Username and password are required' });
+    }
+
+    const existingUser = await getUserByUsername(nextUsername);
+    if (existingUser) {
+      return res.status(409).json({ error: 'Username already taken' });
+    }
+
+    const createdUser = await createUser({
+      username: nextUsername,
+      password_hash: nextPassword,
+    });
+
+    const sessionId = createSession(createdUser.id, nextUsername);
+
+    res.cookie(SESSION_COOKIE_NAME, sessionId, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: SESSION_TTL_MS,
+      path: '/',
+    });
+
+    return res.status(201).json({
+      message: 'Signup and login successful',
+      authenticated: true,
+      userId: createdUser.id,
+      username: nextUsername,
+    });
+  } catch (err) {
+    console.error('Signup error:', err);
+    return res.status(500).json({ error: err.message || 'Signup failed' });
+  }
+});
 
 app.post('/api/login', async (req, res) => {
   try {
@@ -357,6 +399,53 @@ app.post('/api/sessions', async (req, res) => {
   }
     
 });
+
+app.post('/api/user', async (req, res) => {
+  try {
+    const session = getSessionFromRequest(req);
+    if (!session) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    const { username, password } = req.body || {};
+    const nextUsername = typeof username === 'string' ? username.trim() : '';
+    const nextPassword = typeof password === 'string' ? password : '';
+
+    if (!nextUsername && !nextPassword) {
+      return res.status(400).json({ error: 'Username or password is required' });
+    }
+
+    if (nextUsername && nextUsername !== session.username) {
+      const existing = await getUserByUsername(nextUsername);
+      if (existing && existing.id !== session.userId) {
+        return res.status(409).json({ error: 'Username already taken' });
+      }
+      await updateUsernameById(session.userId, nextUsername);
+
+      const activeSession = sessions.get(session.sessionId);
+      if (activeSession) {
+        activeSession.username = nextUsername;
+        sessions.set(session.sessionId, activeSession);
+      }
+    }
+
+    if (nextPassword) {
+      // If you use bcrypt, hash here before saving.
+      await updatePasswordById(session.userId, nextPassword);
+    }
+
+    const updated = await getUserById(session.userId);
+    return res.json({
+      success: true,
+      userId: updated.id,
+      username: updated.username,
+    });
+  } catch (err) {
+    console.error('POST /api/user error:', err);
+    return res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
 
 app.get('/api/users/me/recent-sessions', async (req, res) => {
   try {

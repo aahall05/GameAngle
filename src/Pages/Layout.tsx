@@ -52,7 +52,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         </button>
                     </>
                 ) : (
-                    <button onClick={() => navigate('/login-page')}>Log In</button>
+                    <>
+                        <button onClick={() => navigate('/login-page')}>Log In</button>
+                        <button onClick={() => navigate('/signup')}>Sign Up</button>
+                    </>
                     )}
                 </div>
             </header>

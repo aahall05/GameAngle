@@ -44,3 +44,43 @@ export async function getUserByUsername(username) {
     );
     return result.rows[0]; // return the user with the given username
 }
+
+/**
+ * Update a user's username
+ * @param {number} user_id
+ * @param {string} username
+ * @return {Object} updated user row
+ */
+export async function updateUsernameById(user_id, username) {
+    const result = await pool.query(
+        `
+        UPDATE Users
+        SET username = $1
+        WHERE id = $2
+        RETURNING id, username
+        `,
+        [username, user_id]
+    );
+
+    return result.rows[0];
+}
+
+/**
+ * Update a user's password
+ * @param {number} user_id
+ * @param {string} password_hash
+ * @return {Object} updated user row
+ */
+export async function updatePasswordById(user_id, password_hash) {
+    const result = await pool.query(
+        `
+        UPDATE Users
+        SET password_hash = $1
+        WHERE id = $2
+        RETURNING id, username
+        `,
+        [password_hash, user_id]
+    );
+
+    return result.rows[0];
+}
