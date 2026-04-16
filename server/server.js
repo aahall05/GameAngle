@@ -2,6 +2,7 @@ import ffmpeg from 'fluent-ffmpeg';
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
+import { promises as fs } from 'fs';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
@@ -259,6 +260,7 @@ app.post('/api/upload/:collageId', upload.single('video'), async (req, res) => {
     let createdAtValue = null;
     let timeValue = null;
     let lengthSecondsValue = null;
+    let hasQuickTimeCreationDate = false;
 
 
     const durationRaw = typeof req.body.duration === 'string' ? req.body.duration : '';
@@ -279,13 +281,11 @@ app.post('/api/upload/:collageId', upload.single('video'), async (req, res) => {
         }
 
 
-        let dateStr = metadata.format?.tags?.creationdate ||
-                      metadata.format?.tags?.['com.apple.quicktime.creationdate'];
+        const dateStr =
+          metadata.format?.tags?.['com.apple.quicktime.creationdate'] ||
+          metadata.format?.tags?.['quicktime.creationdate'];
 
-
-        if (!dateStr) {
-          dateStr = metadata.format?.tags?.creation_time;
-        }
+        hasQuickTimeCreationDate = Boolean(dateStr);
 
         if (dateStr) {
           const parsedDate = new Date(dateStr);
@@ -303,16 +303,16 @@ app.post('/api/upload/:collageId', upload.single('video'), async (req, res) => {
       });
     });
 
-      //fallback
-    if (!createdAtValue) {
-      const createDateRaw = typeof req.body.create_date === 'string' ? req.body.create_date : '';
-      if (createDateRaw) {
-        const parsedDate = new Date(createDateRaw);
-        if (!isNaN(parsedDate.getTime())) {
-          createdAtValue = parsedDate.toISOString().slice(0, 10);
-          timeValue = parsedDate.toISOString().slice(11, 19);
-        }
+    if (!hasQuickTimeCreationDate || !createdAtValue || !timeValue) {
+      try {
+        await fs.unlink(videoPath);
+      } catch (unlinkError) {
+        console.error('Failed to remove invalid upload:', unlinkError);
       }
+
+      return res.status(400).json({
+        error: 'Video must be recorded on iPhone (missing quicktime.creationdate metadata)',
+      });
     }
 
     if (!lengthSecondsValue) {

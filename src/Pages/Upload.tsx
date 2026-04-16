@@ -17,6 +17,7 @@ function Upload() {
   const [duration, setDuration] = useState('');
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<'success' | 'error' | null>(null);
   const [uploadResult, setUploadResult] = useState<any>(null);
   const [isOwner, setIsOwner] = useState(false);
 
@@ -103,6 +104,7 @@ function Upload() {
       setDuration(extractedDuration !== null ? String(extractedDuration) : '');
 
       setMessage(null);
+      setMessageType(null);
       setUploadResult(null);
     }
   };
@@ -112,6 +114,7 @@ function Upload() {
 
     setUploading(true);
     setMessage(null);
+    setMessageType(null);
 
     const formData = new FormData();
     formData.append('video', file);
@@ -134,12 +137,14 @@ function Upload() {
 
       setUploadResult(data);
       setMessage(`Success! Video uploaded to collage #${data.collageId}`);
+      setMessageType('success');
       setFile(null);
 
 
 
     } catch (err: any) {
       setMessage(`Upload failed: ${err.message}`);
+      setMessageType('error');
       console.error(err);
     } finally {
       setUploading(false);
@@ -204,8 +209,8 @@ function Upload() {
             marginTop: '1rem',
             padding: '10px',
             borderRadius: '6px',
-            backgroundColor: message.includes('Error') ? '#ffe6e6' : '#e6ffe6',
-            color: message.includes('Error') ? '#cc0000' : '#006600',
+            backgroundColor: messageType === 'error' ? '#ffe6e6' : '#e6ffe6',
+            color: messageType === 'error' ? '#cc0000' : '#006600',
           }}>
             {message}
           </div>

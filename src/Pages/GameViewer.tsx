@@ -312,7 +312,7 @@ function GameViewer() {
         }
 
         const date = new Date(absoluteTimelineMs);
-        return date.toLocaleTimeString();
+        return date.toLocaleTimeString() + " UTC";
     }, [absoluteTimelineMs]);
 
     useEffect(() => {
