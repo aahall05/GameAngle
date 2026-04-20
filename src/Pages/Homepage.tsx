@@ -10,6 +10,8 @@ type PublicSession = {
     created_at: string;
 };
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 function Homepage() {
     const navigate = useNavigate();
     const [sessions, setSessions] = useState<PublicSession[]>([]);
@@ -19,7 +21,7 @@ function Homepage() {
     useEffect(() => {
         const fetchSessions = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/sessions', {
+                const response = await fetch(`${API_BASE}/api/sessions`, {
                     method: 'GET',
                     credentials: 'include',
                 });

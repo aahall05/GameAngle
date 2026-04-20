@@ -5,6 +5,8 @@ import tempLogo from '../assets/TempLogo2.png';
 import '../Stylesheets/Layout.css';
 import { useAuth } from '../AuthContext';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
     const { loggedIn, username, setLoggedIn, setUserId, setUsername } = useAuth();
@@ -13,7 +15,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const handleLogout = async () => {
         try {
             setIsLoggingOut(true);
-            await fetch('http://localhost:3000/api/logout', {
+            await fetch(`${API_BASE}/api/logout`, {
                 method: 'POST',
                 credentials: 'include',
             });

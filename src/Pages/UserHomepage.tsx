@@ -12,6 +12,8 @@ type SessionListItem = {
     created_at: string;
 };
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 function UserHomepage() {
     const navigate = useNavigate();
     const { loggedIn, authLoading, username } = useAuth();
@@ -30,7 +32,7 @@ function UserHomepage() {
 
         const loadRecentSessions = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/users/me/recent-sessions', {
+                const response = await fetch(`${API_BASE}/api/users/me/recent-sessions`, {
                     method: 'GET',
                     credentials: 'include',
                 });
