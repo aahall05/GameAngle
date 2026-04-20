@@ -1,4 +1,3 @@
-
 .create-session {
     border-radius: 12px;
     padding: 2rem;
@@ -47,4 +46,37 @@
 .public-collage-title {
     margin: 0;
     font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+    .create-session {
+        width: 100%;
+        margin: 0;
+    }
+
+    .homepage-row {
+        width: 100%;
+        padding: 1rem 0;
+        flex-direction: column;
+    }
+
+    .homepage-column {
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .homepage-row {
+        gap: 0.75rem;
+    }
+
+    .public-collage-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .public-collage-item button {
+        width: 100%;
+    }
 }

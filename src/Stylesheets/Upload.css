@@ -45,3 +45,18 @@
     border: 1px solid #eee;
     border-radius: 8px;
 }
+
+@media (max-width: 768px) {
+    .upload-container {
+        margin-top: 1rem;
+    }
+
+    .share-panel {
+        max-width: 100%;
+    }
+
+    .share-qr {
+        width: 180px;
+        height: 180px;
+    }
+}

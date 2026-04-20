@@ -196,3 +196,41 @@
     .angle-scroll-btn:hover {
         color: #000;
     }
+
+@media (max-width: 768px) {
+    .game-viewer-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .timeline-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .timeline-left-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .game-viewer-angle-card {
+        flex-direction: column !important;
+        align-items: stretch;
+        padding: 0.75rem !important;
+    }
+
+    .angle-strip {
+        gap: 0.6rem;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+    }
+
+    .angle-thumbnail {
+        width: 150px;
+    }
+
+    .timeline-label-row {
+        font-size: 0.78rem;
+    }
+}

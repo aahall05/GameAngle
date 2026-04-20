@@ -108,3 +108,32 @@
     .copy-button:hover {
         background-color: #0052a3;
     }
+
+@media (max-width: 768px) {
+    .session-creation-container {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    .session-form {
+        gap: 1rem;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-group label {
+        width: auto;
+        text-align: left;
+    }
+
+    .link-container {
+        flex-direction: column;
+    }
+
+    .copy-button {
+        width: 100%;
+    }
+}
