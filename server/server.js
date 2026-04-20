@@ -109,7 +109,7 @@ app.post('/api/signup', async (req, res) => {
 
     res.cookie(SESSION_COOKIE_NAME, sessionId, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: process.env.NODE_ENV === 'production',
       maxAge: SESSION_TTL_MS,
       path: '/',
@@ -145,7 +145,7 @@ app.post('/api/login', async (req, res) => {
 
     res.cookie(SESSION_COOKIE_NAME, sessionId, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: process.env.NODE_ENV === 'production',
       maxAge: SESSION_TTL_MS,
       path: '/',
@@ -187,7 +187,7 @@ app.post('/api/logout', (req, res) => {
 
   res.clearCookie(SESSION_COOKIE_NAME, {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
   });
