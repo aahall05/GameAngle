@@ -4,6 +4,8 @@ import Layout from './Layout';
 import '../Stylesheets/SessionCreation.css';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 function SessionCreation() {
 
     const navigate = useNavigate();
@@ -35,7 +37,7 @@ function SessionCreation() {
 
         try {
             // Send data to backend
-            const response = await fetch('http://localhost:3000/api/sessions', {
+            const response = await fetch(`${API_BASE}/api/sessions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

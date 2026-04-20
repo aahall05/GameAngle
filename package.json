@@ -8,10 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node .\\server\\server.js",
-    "initDB": "node .\\server\\init-db.js",
-    "washDB": "node .\\server\\wash-db.js",
-    "testDB": "node .\\server\\wash-db.js && node .\\server\\init-db.js && node .\\test-db.js"
+    "server": "node ./server/server.js",
+    "initDB": "node ./server/init-db.js",
+    "washDB": "node ./server/wash-db.js",
+    "testDB": "node ./server/wash-db.js && node ./server/init-db.js && node ./test-db.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

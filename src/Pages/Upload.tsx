@@ -4,6 +4,8 @@ import '../Stylesheets/Upload.css';
 import Layout from './Layout';
 import { useAuth } from '../AuthContext';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 function Upload() {
   const { collageId } = useParams(); // gets string from /upload/:collageId
   const collageIdNum = collageId ? parseInt(collageId, 10) : null;
@@ -47,7 +49,7 @@ function Upload() {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/api/collages/${collageIdNum}/videos`, {
+        const response = await fetch(`${API_BASE}/api/collages/${collageIdNum}/videos`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -122,7 +124,7 @@ function Upload() {
     formData.append('duration', duration);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/upload/${collageIdNum}`, {
+      const response = await fetch(`${API_BASE}/api/upload/${collageIdNum}`, {
         method: 'POST',
         body: formData,
         credentials: 'include',           //ession cookie for auth later
@@ -224,7 +226,7 @@ function Upload() {
             {/* Video preview */}
             <video width="500" controls style={{ margin: '1rem 0' }}>
               <source
-                src={`http://localhost:3000/videofiles/${uploadResult.filename}`}
+                src={`${API_BASE}/videofiles/${uploadResult.filename}`}
                 type="video/mp4"
               />
               Your browser does not support the video tag.

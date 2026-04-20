@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Layout from './Layout';
 import { Link } from 'react-router-dom';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 const Login = () => {
     const { setLoggedIn, setUserId, setUsername } = useAuth();
     const navigate = useNavigate();
@@ -19,7 +21,7 @@ const Login = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
+            const response = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

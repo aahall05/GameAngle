@@ -5,6 +5,8 @@ import Card from '../Components/Card';
 import { useAuth } from '../AuthContext';
 import '../Stylesheets/GameViewer.css';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 type Video = {
     id: number;
     collage_id: number;
@@ -165,7 +167,7 @@ function GameViewer() {
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/api/collages/${collageId}/videos`, {
+                const response = await fetch(`${API_BASE}/api/collages/${collageId}/videos`, {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -341,7 +343,7 @@ function GameViewer() {
                         continue;
                     }
 
-                    const response = await fetch(`http://localhost:3000${video.path}`, {
+                    const response = await fetch(`${API_BASE}${video.path}`, {
                         credentials: 'include',
                     });
 

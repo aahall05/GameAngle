@@ -5,6 +5,8 @@ import Card from '../Components/Card';
 import { useAuth } from '../AuthContext';
 import '../Stylesheets/JoinSessions.css';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 type SessionListItem = {
     id: number;
     name: string;
@@ -37,7 +39,7 @@ function JoinSessions() {
             setErrorMessage('');
 
             try {
-                const response = await fetch(`http://localhost:3000/api/sessions?search=${encodeURIComponent(searchParam)}`, {
+                const response = await fetch(`${API_BASE}/api/sessions?search=${encodeURIComponent(searchParam)}`, {
                     method: 'GET',
                     credentials: 'include',
                 });

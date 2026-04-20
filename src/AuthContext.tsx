@@ -3,6 +3,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 type AuthContextType = {
     loggedIn: boolean;
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/auth/session', {
+                const response = await fetch(`${API_BASE}/api/auth/session`, {
                     method: 'GET',
                     credentials: 'include',
                 });
