@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Layout from './Layout';
 import { useAuth } from '../AuthContext';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://gameangle.onrender.com';
 
 function UserInformation() {
     const { username: currentUsername, setUsername } = useAuth();

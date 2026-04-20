@@ -4,7 +4,7 @@ import Layout from './Layout';
 import '../Stylesheets/SessionCreation.css';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://gameangle.onrender.com';
 
 function SessionCreation() {
 

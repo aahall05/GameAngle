@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Layout from './Layout';
 import { Link } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://gameangle.onrender.com';
 
 const Login = () => {
     const { setLoggedIn, setUserId, setUsername } = useAuth();

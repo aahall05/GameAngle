@@ -5,7 +5,7 @@ import tempLogo from '../assets/TempLogo2.png';
 import '../Stylesheets/Layout.css';
 import { useAuth } from '../AuthContext';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://gameangle.onrender.com';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();

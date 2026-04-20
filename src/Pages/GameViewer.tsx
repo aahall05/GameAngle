@@ -5,7 +5,7 @@ import Card from '../Components/Card';
 import { useAuth } from '../AuthContext';
 import '../Stylesheets/GameViewer.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://gameangle.onrender.com';
 
 type Video = {
     id: number;
@@ -564,7 +564,7 @@ function GameViewer() {
                             <video
                                 ref={selectedVideoRef}
                                 className="video-player"
-                                src={`http://localhost:3000${selectedVideo.path}`}
+                                src={`https://gameangle.onrender.com${selectedVideo.path}`}
                                 controls={false}
                             >
                                 Your browser does not support the video tag.
@@ -655,7 +655,7 @@ function GameViewer() {
                                                         }
                                                     }}
                                                     className="angle-thumbnail-video"
-                                                    src={`http://localhost:3000${video.path}`}
+                                                    src={`https://gameangle.onrender.com${video.path}`}
                                                     muted
                                                     playsInline
                                                     preload="metadata"
