@@ -509,6 +509,13 @@ app.get('/api/sessions', async (req, res) => {
 
 
 
+const cors = require('cors');
+
+app.use(cors({
+  origin: ['https://ga-ui.vercel.app/'],
+  credentials: true
+}));
+
 
 
 
